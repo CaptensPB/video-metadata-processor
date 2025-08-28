@@ -1,46 +1,21 @@
 name: Process Video Metadata
 
 on:
-  workflow_dispatch:
-    inputs:
-      file_id:
-        description: 'Google Drive File ID'
-        required: true
-        type: string
-      tags:
-        description: 'Tags to add (comma separated)'
-        required: true
-        type: string
-      description:
-        description: 'Description to add'
-        required: true
-        type: string
-      niche:
-        description: 'Video niche'
-        required: true
-        type: string
+  repository_dispatch:
+    types: [process-video]
 
 jobs:
   process-video:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Install dependencies
+    - name: Setup
       run: |
-        sudo apt-get update
-        sudo apt-get install -y exiftool ffmpeg curl
+        echo "File ID: ${{ github.event.client_payload.file_id }}"
+        echo "Tags: ${{ github.event.client_payload.tags }}"
+        echo "Success - GitHub Action triggered!"
         
-    - name: Process video metadata
+    - name: Return result
       run: |
-        echo "Processing video with ID: ${{ github.event.inputs.file_id }}"
-        echo "Tags: ${{ github.event.inputs.tags }}"
-        echo "Niche: ${{ github.event.inputs.niche }}"
-        
-        # Download file from Google Drive (placeholder)
-        echo "Video metadata processing complete!"
-        
-        # Return success response
-        echo "SUCCESS"
+        echo "Metadata processing complete"
+        echo "Ready for n8n integration"
